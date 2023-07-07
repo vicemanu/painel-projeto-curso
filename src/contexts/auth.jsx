@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth, db } from '../services/firebase'
@@ -44,7 +45,7 @@ function AuthProvider({ children }) {
 
             let data = {
                 uid: uid,
-                name: docSnap.data().name,
+                nome: docSnap.data().name,
                 email: value.user.email,
                 avatarUrl: docSnap.data().avatarUrl
             }
@@ -76,7 +77,7 @@ function AuthProvider({ children }) {
             .then(()=> {
                 let data = {
                     uid: uid,
-                    name: name,
+                    nome: name,
                     email: value.user.email,
                     avatarUrl: null
                 }
