@@ -2,14 +2,37 @@ import { FiUser } from 'react-icons/fi'
 import Header from '../../components/Header'
 import Title from '../../components/Title'
 import { useState } from 'react'
+import { addDoc, collection } from 'firebase/firestore'
+import { db } from '../../services/firebase'
+import { toast } from 'react-toastify'
 
 export default function Customers() {
     const [nome, setNome] = useState('')
     const [cnpj, setCnpj] = useState('')
     const [endereco, setEndereco] = useState('')
 
-    function handleRegister(e) {
-        e.preventDefaut();
+    async function handleRegister(e) {
+        e.preventDefault();
+
+        if(nome !== '' && cnpj !== '' && endereco !== '') {
+            await addDoc(collection(db,"customers"), {
+                nomeFantasia: nome,
+                cnpj: cnpj,
+                endereco: endereco,
+            })
+            .then(()=> {
+                setNome('')
+                setCnpj('')
+                setEndereco('')
+                toast.success("Empresa registrada!")
+            })
+            .catch(error => {
+                console.log(error)
+                toast.error("Erro ao fazer cadastro")
+            })
+        } else {
+            toast.error("Preencha todos os campos!")
+        }
     }
 
     return(
@@ -22,7 +45,7 @@ export default function Customers() {
                 </Title>
 
                 <div className="container">
-                    <form className="form-profile" onSubmit={handleRegister}>
+                    <form className="form-profile" onSubmit={e => handleRegister(e)}>
                         <label htmlFor="nome">Nome Fantasia</label>
                         <input type="text" 
                         id='nome'
