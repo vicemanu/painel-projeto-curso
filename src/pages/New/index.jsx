@@ -4,9 +4,10 @@ import Title from '../../components/Title'
 import { FiPlusCircle } from 'react-icons/fi'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../contexts/auth'
-import { collection, getDocs } from 'firebase/firestore'
+import { addDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 import { list } from 'firebase/storage'
+import { toast } from 'react-toastify'
 
 
 const listRef = collection(db, "customers")
@@ -71,7 +72,30 @@ export default function New() {
         setCustomersSelected(e.target.value)
     }
 
+   async function handleRegister(e) {
+        e.preventDefault()
 
+        await addDoc(collection(db, "chamados"), {
+            created: new Date(),
+            cliente: customers[customersSelected].nomeFantasia,
+            clienteId: customers[customersSelected].id,
+            assunto: assunto,
+            complemento: complemento,
+            status: status,
+            userId: user.uid,
+        })
+        .then( () => {
+            toast.success("Chamado registrado")
+            setComplemento('')
+            setCustomersSelected(0)
+        }
+            
+        )
+        .catch(error => {
+            console.log(error)
+            toast.error("ops erro ao registrar")
+        })
+    }
 
     return(
         <div>
@@ -83,7 +107,7 @@ export default function New() {
                 </Title>
 
                 <div className="container">
-                    <form className="form-profile">
+                    <form onSubmit={handleRegister} className="form-profile">
 
                         <label htmlFor="">Clientes</label>
                         {
