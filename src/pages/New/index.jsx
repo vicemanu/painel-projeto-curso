@@ -2,21 +2,74 @@ import './new.css'
 import Header from '../../components/Header'
 import Title from '../../components/Title'
 import { FiPlusCircle } from 'react-icons/fi'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { AuthContext } from '../../contexts/auth'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '../../services/firebase'
+import { list } from 'firebase/storage'
+
+
+const listRef = collection(db, "customers")
+
 
 export default function New() {
 
+    const { user } = useContext(AuthContext);
+
     const [customers, setCustomers] = useState([])
+    const [loadCustomers, setLoadCustomers] = useState(true)
+    const [customersSelected, setCustomersSelected] = useState(0)
 
     const [complemento, setComplemento] = useState('')
     const [assunto, setAssunto] = useState('Suporte')
     const [status, setStatus] = useState('Aberto')
+
+    useEffect(()=> {
+        async function loalCustomers() {
+            const querySnapshot = await getDocs(listRef)
+            .then((snapshot)=> {
+                let lista = []
+
+                snapshot.forEach(doc => {
+                    lista.push({
+                        id: doc.id,
+                        nomeFantasia: doc.data().nomeFantasia
+                    })
+                })
+
+
+                if(snapshot.docs.size === 0) {
+                    setCustomers([{id: '1', nomeFantasia: 'FREELA'}])
+                    setLoadCustomers(false)
+                    return;
+                }
+
+                setCustomers(lista);
+                setLoadCustomers(false)
+            })
+            .catch(error => {
+                console.log(error)
+                setLoadCustomers(false);
+                setCustomers([{id: '1', nomeFantasia: 'FREELA'}])
+            })
+        }
+        loalCustomers()
+    },[])
+
+
 
 
     function handleOptionChange(e) {
         setStatus(e.target.value)
     }
 
+    function handleChangeSelect(e) {
+        setAssunto(e.target.value  )
+    }
+
+    function handleChangeCustomer(e) {
+        setCustomersSelected(e.target.value)
+    }
 
 
 
@@ -33,13 +86,27 @@ export default function New() {
                     <form className="form-profile">
 
                         <label htmlFor="">Clientes</label>
-                        <select name="" id="">
-                            <option value="1">Mercado teste</option>
-                            <option value="2">Mercado teste 2</option>
-                        </select>
+                        {
+                            loadCustomers ? (
+                                <input type='text' disabled={true} value={"Carregando..."} />
+                            ) : (
+                                <select value={customersSelected} onChange={handleChangeCustomer}>
+                                    {
+                                        customers.map((item, index) => {
+                                            return(
+                                                <option key={index} value={index}>
+                                                    {item.nomeFantasia}
+                                                </option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            )
+                        }
+
 
                         <label htmlFor="">Assunto</label>
-                        <select name="" id="">
+                        <select value={assunto} onChange={handleChangeSelect} name="" id="">
                             <option value="Suporte">Suporte</option>
                             <option value="Visita Tecnica">Visita Tecnica</option>
                             <option value="Financeiro">Financeiro</option>
