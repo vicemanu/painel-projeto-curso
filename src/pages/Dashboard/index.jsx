@@ -44,7 +44,11 @@ export default function Dashboard() {
                         <tr>
                             <td data-aria-label="Cliente">mecardo de esquina</td>
                             <td data-aria-label="Assunto">mecardo de esquina</td>
-                            <td data-aria-label="Status">mecardo de esquina</td>
+                            <td data-aria-label="Status">
+                                <span className="badge" style={{backgroundColor: "#999"}}>
+                                    Em aberto
+                                </span>
+                            </td>
                             <td data-aria-label="Cadastrado">mecardo de esquina</td>
                             <td data-aria-label="#">
                                 <button className="action" style={{backgroundColor: '#3583f6'}}>
