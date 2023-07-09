@@ -1,5 +1,3 @@
-import { useContext } from "react"
-import { AuthContext } from "../../contexts/auth"
 import Header from "../../components/Header";
 import Title from '../../components/Title'
 
@@ -8,12 +6,6 @@ import { FiEdit2, FiMessageSquare, FiPlus, FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-
-    const { logout } = useContext(AuthContext)
-
-    async function handleLougout() {
-        await logout();
-    }
 
     return(
         <div>
