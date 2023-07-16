@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import './modal.css'
 import { FiX } from 'react-icons/fi'
 

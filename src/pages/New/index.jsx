@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import './new.css'
 import Header from '../../components/Header'
 import Title from '../../components/Title'
@@ -8,7 +9,6 @@ import { addDoc, collection, doc, getDoc, getDocs, updateDoc } from 'firebase/fi
 import { db } from '../../services/firebase'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
-import Modal from '../../components/Modal'
 
 
 const listRef = collection(db, "customers")
@@ -246,7 +246,6 @@ export default function New() {
                 </div>
             </div>
 
-            <Modal/>
         </div>
     )
 }
